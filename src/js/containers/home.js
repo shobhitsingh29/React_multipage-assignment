@@ -5,75 +5,86 @@ import ItemsList from "./itemsList";
 class Home extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            searchText: "",
-            data: []
-        };
-        this.handleSearchText = this.handleSearchText.bind(this);
+        this.handlesearchTerm = this.handlesearchTerm.bind(this);
         this.searchData = this.searchData.bind(this);
-        this.clearData = this.clearData.bind(this);
+        this.clearData = this.clearData.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
+        this.state = {
+            searchTerm: "",
+            renderedData: []
+        };
     }
-    handleSearchText(event) {
-        var value = event.target.value;
+
+    handlesearchTerm(event) {
         this.setState({
-            searchText: value
+            searchTerm: event.target.value
         });
     }
+
     searchData() {
-        if(this.state.searchText) {
-            // window.location.href = window.location.hostname+window.location.port+"search/q="+ this.state.searchText;
-            window.location.href = "/search/" + this.state.searchText;
-        }else{
+        if (this.state.searchTerm) {
+            window.location.href = "/search/" + this.state.searchTerm;
+        } else {
             console.log("search box empty");
         }
     }
-    clearData(){
+
+    clearData() {
         this.setState({
-            searchText: ""
+            searchTerm: ""
         });
+    }
+
+    handleSearch(renderedData, url, param) {
+        if (url.indexOf(param) > 0) {
+            let splitURL = url.split("/");
+            let searchString = splitURL[splitURL.length - 1].toUpperCase();
+            let searchedObject = [];
+            let dataLength = 0;
+            let lengthOfItems = renderedData.items.length;
+
+            for (let i = 0; i < lengthOfItems; i++) {
+                let description = renderedData.items[i]["description"].toUpperCase();
+                let name = renderedData.items[i]["name"].toUpperCase();
+                let id = renderedData.items[i]["id"].toUpperCase();
+                if (description.indexOf(searchString) >= 0 || name.indexOf(searchString) >= 0 || id.indexOf(searchString) >= 0) {
+                    searchedObject.push(renderedData.items[i]);
+                }
+            }
+            this.setState({
+                renderedData: searchedObject,
+                dataLen: dataLength
+            });
+        }
+        else {
+            this.setState({
+                renderedData: renderedData.items
+            });
+        }
+
     }
 
     componentDidMount() {
         var main = this;
-        fetch("http://localhost:3000/tilesData").then(function(response){
+        fetch("http://localhost:3000/tilesData").then(function (response) {
             return response.json();
-        }).then(function(data){
+        }).then(function (data) {
             var currentURL = window.location.href;
-            if(currentURL.indexOf("search") > 0) {
-                let splitURL = currentURL.split("/");
-                let searchString = splitURL[splitURL.length-1].toUpperCase();
-                let dataToRender = [];
-                let dataLength=0;
-                let lengthOfItems = data.items.length;
-
-                for(let i = 0; i < lengthOfItems ; i++) {
-                    let description = data.items[i]["description"].toUpperCase();
-                    let name = data.items[i]["name"].toUpperCase();
-                    let id = data.items[i]["id"].toUpperCase();
-                    if(description.indexOf(searchString)>=0 || name.indexOf(searchString)>=0 ||id.indexOf(searchString)>=0) {
-                        dataToRender.push(data.items[i]);
-                    }
-                }
-                main.setState({
-                    data: dataToRender,
-                    dataLen:dataLength
-                });
-            }
-            else {
-                main.setState({
-                    data: data.items
-                });
-            }
+            main.handleSearch(data, currentURL, "search");
         })
-        .catch(function(err){
-            console.log("An Error Occured:", err);
-        });
+            .catch(function (err) {
+                console.log("Error Occured:", err);
+            });
     }
+
     render() {
         return (
             <div className="bg-detail">
-                <Search searchText={this.state.searchText} handleSearchText={this.handleSearchText} searchData={this.searchData} clearData={this.clearData}/>
-                {this.state.data.length ? <ItemsList searchText={this.state.searchText} items={this.state.data}/> :<div className="no-result">No Result Found , Search Again</div>}
+                <Search searchTerm={this.state.searchTerm} handlesearchTerm={this.handlesearchTerm}
+                        searchData={this.searchData} clearData={this.clearData}/>
+                {this.state.renderedData.length ?
+                    <ItemsList searchTerm={this.state.searchTerm} items={this.state.renderedData}/> :
+                    <div className="no-result">No Result Found , Search Again</div>}
             </div>
         );
     }

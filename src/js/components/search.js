@@ -4,7 +4,7 @@ const Search = (props) => {
     return (
         <div >
         <form>
-            <input type="text"  name="focus"  className="search-box"   placeholder="Search" value={props.searchText} onChange={props.handleSearchText} />
+            <input type="text"  name="focus"  className="search-box"   placeholder="Search" value={props.searchTerm} onChange={props.handlesearchTerm} />
             <button className="close-icon" type="reset"  onClick={props.clearData}/>
             <input type="button" value="search" onClick={props.searchData}/>
         </form>

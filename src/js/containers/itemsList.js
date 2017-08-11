@@ -7,9 +7,6 @@ class ItemsList extends React.Component{
         super(props);
         this.handleDetailsClick = this.handleDetailsClick.bind(this);
     }
-    handleDetailsClick(event){
-        console.log(event.target.src);
-    }
     render(){
         return (
             <ul className="inline-display">

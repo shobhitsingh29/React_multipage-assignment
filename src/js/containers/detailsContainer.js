@@ -26,11 +26,11 @@ class DetailsContainer extends React.Component {
     }
 
     handleDataChange(args, event) {
-        var value = event.target.value;
-        var name = args[0]["name"];
-        var newObj = {};
+        let value = event.target.value;
+        let name = args[0]["name"];
+        let newObj = {};
         newObj[name] = value;
-        var newItemData = Object.assign({}, this.state.tempData, newObj);
+        let newItemData = Object.assign({}, this.state.tempData, newObj);
         this.setState({
             tempData: newItemData
         });
@@ -49,28 +49,23 @@ class DetailsContainer extends React.Component {
     }
 
     postData() {
-
-        var payload = Object.assign({}, this.state.tempData);
-        var id = this.state.tempData.id;
-        var data = new FormData();
+        let payload = Object.assign({}, this.state.tempData);
+        let id = this.state.tempData.id;
         fetch(`http://localhost:3000/tilesData/${id}`, {
             method: "put",
             headers: {
-                "Accept": "application/json",
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(payload)
         }).then(function (response) {
             return response.json();
         }).then(function (data) {
-
+            console.log(data);
         });
 
     }
 
     saveData() {
-        console.log(this.state.tempData);
-        console.log(this.state.itemData);
         this.setState({
             itemData: this.state.tempData
         });
@@ -78,7 +73,7 @@ class DetailsContainer extends React.Component {
     }
 
     componentDidMount() {
-        var main = this;
+        var self = this;
         fetch("http://localhost:3000/tilesData").then(function (response) {
             return response.json();
         }).then(function (data) {
@@ -89,7 +84,7 @@ class DetailsContainer extends React.Component {
             for (let i = 0; i < lengthOfItems; i++) {
                 let id = data.items[i]["id"];
                 if (searchString === id) {
-                    main.setState({
+                    self.setState({
                         itemData: data.items[i],
                         tempData: data.items[i]
                     });
@@ -102,15 +97,14 @@ class DetailsContainer extends React.Component {
     render() {
         return (
             <div >
-				<Detail handleEdit={this.handleEdit}  itemData={this.state.itemData}/>{
+                <Detail handleEdit={this.handleEdit} itemData={this.state.itemData}/>
+                {this.state.edit &&
+                <EditDetail itemData={this.state.tempData} closeButton={this.closeButton}
+                            handleDataChange={this.handleDataChange}
+                            saveData={this.saveData}/>
+                }
 
-            }
-				{this.state.edit &&
-                    <EditDetail  itemData={this.state.tempData} closeButton={this.closeButton}   handleDataChange={this.handleDataChange}
-								saveData={this.saveData}/>
-				}
-
-			</div>
+            </div>
         );
     }
 }

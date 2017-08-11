@@ -3,7 +3,6 @@ let  webpack = require('webpack');
 module.exports = {
     devtool: "inline-source-map",
     entry: [
-        'webpack-hot-middleware/client?reload=true',
         path.resolve(__dirname, "src/js/main.js")
     ],
     output: {
@@ -13,11 +12,6 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.jsx', '.json']
-    },
-    devServer: {
-        hot: true,
-        publicPath: "/",
-        historyApiFallback: true
     },
     plugins: [new webpack.HotModuleReplacementPlugin({
         multiStep: false
