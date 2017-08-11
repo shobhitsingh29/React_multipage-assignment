@@ -10,10 +10,6 @@ const EditDetail = (props) => {
                     <div className="detail_modal_heading"><b>EDIT TILE</b></div>
                     <div>
                         <div className="form-group col-sm-12">
-                            <label>ID:</label>
-                            <input type="number" value={props.itemData.id} onChange={props.handleDataChange.bind(this, [{name:"id"}])}/>
-                        </div>
-                        <div className="form-group col-sm-12">
                             <label>Name:</label>
                             <input type="text" value={props.itemData.name} onChange={props.handleDataChange.bind(this, [{name:"name"}])}/>
                         </div>

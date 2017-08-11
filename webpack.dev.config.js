@@ -1,5 +1,5 @@
 const path = require("path");
-var webpack = require('webpack');
+let  webpack = require('webpack');
 module.exports = {
     devtool: "inline-source-map",
     entry: [
@@ -19,7 +19,9 @@ module.exports = {
         publicPath: "/",
         historyApiFallback: true
     },
-    plugins: [new webpack.HotModuleReplacementPlugin(), new webpack.NamedModulesPlugin()],
+    plugins: [new webpack.HotModuleReplacementPlugin({
+        multiStep: false
+    }), new webpack.NamedModulesPlugin()],
     module: {
         loaders: [
             {
@@ -27,7 +29,7 @@ module.exports = {
                 test: /\.js$/,
                 loader: 'eslint-loader',
                 options: {
-                    fix:true
+                    fix: true
                 },
                 exclude: /(node_modules)/
             },

@@ -1,8 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 module.exports = {
-    devtool: "inline-source-map",
-    entry: ['webpack-hot-middleware/client?reload=true',
+    entry: [
         path.resolve(__dirname, "./src/js/main.js")
     ],
     output: {
@@ -15,19 +14,21 @@ module.exports = {
     },
     devServer: {
         port: 8080,
-        hot: true,
+        hot: false,
         publicPath: "/",
         historyApiFallback: true
     },
-    plugins: [new webpack.HotModuleReplacementPlugin(),
+    plugins: [ new webpack.HotModuleReplacementPlugin({
+        multiStep: false
+    }),
         new webpack.NamedModulesPlugin()],
     module: {
         loaders: [
             {
-                enforce : 'pre',
-                test : /\.js$/,
-                loader : 'eslint-loader',
-                exclude : /(node_modules)/
+                enforce: 'pre',
+                test: /\.js$/,
+                loader: 'eslint-loader',
+                exclude: /(node_modules)/
             },
             {
                 test: /\.js$/,

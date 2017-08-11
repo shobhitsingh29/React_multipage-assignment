@@ -15,6 +15,7 @@ const
             </li>
         </div>
     );
+
 };
 export default Details;
 

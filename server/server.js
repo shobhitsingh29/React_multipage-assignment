@@ -17,17 +17,16 @@ app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true,
     publicPath: config.output.publicPath
 }));
-app.use('/', express.static('dist'));
+
 
 app.use(webpackHotMiddleware(compiler));
 app.listen(port, function (error) {
     if (error) {
         console.log(error);
     } else {
-        open(`http://localhost:${port}`)
+        open(`http://localhost:${port}`);
     }
 });
-
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '../public/index.html'));
@@ -84,4 +83,5 @@ app.get('/image/:imgName', function (req, res) {
     res.sendFile(path.join(__dirname, '../assets/img/' + req.params.imgName));
 });
 
-console.log(`listening on ${port}`)
+app.use('/public/', express.static('./dist'));
+console.log(`listening on ${port}`);
